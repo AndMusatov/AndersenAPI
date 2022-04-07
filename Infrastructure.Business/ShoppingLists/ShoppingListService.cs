@@ -7,38 +7,41 @@ namespace Infrastructure.Business.ShoppingLists
 {
     public class ShoppingListService : IShoppingListService
     {
-        readonly IShoppingListRepository _repository;
+        private readonly IShoppingListRepository _repository;
+        private const string DeletedStatus = "Deleted";
+        private const string UpdatedStatus = "Updated";
+
         public ShoppingListService(IShoppingListRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<ShoppingList> GetItem(int id)
+        public async Task<ShoppingList> GetItemAsync(int id)
         {
-            return await _repository.GetById(id);
+            return await _repository.GetByIdAsync(id);
         }
 
-        public async Task<ShoppingList> AddItem(string name)
+        public async Task<ShoppingList> AddItemAsync(string name)
         {
-            ShoppingList item = new ShoppingList
+            var item = new ShoppingList
             {
                 Title = name
             };
-            await _repository.Add(item);
+            await _repository.AddAsync(item);
             return item;
         }
 
-        public async Task<string> DeleteItem(int id)
+        public async Task<string> DeleteItemAsync(int id)
         {
-            var item = await _repository.GetById(id);
-            await _repository.Remove(item);
-            return "ShoppingList was deleted";
+            var item = await _repository.GetByIdAsync(id);
+            await _repository.RemoveAsync(item);
+            return DeletedStatus;
         }
 
-        public async Task<string> UpdateItem(int id, string newName)
+        public async Task<string> UpdateItemAsync(int id, string newName)
         {
-            await _repository.UpdateList(id, newName);
-            return "ShoppingList was updated";
+            await _repository.UpdateListAsync(id, newName);
+            return UpdatedStatus;
         }
     }
 }

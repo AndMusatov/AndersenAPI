@@ -7,6 +7,6 @@ namespace Domain.Core.Forms
     {
         public string Name { get; set; }
 
-        public List<ItemInList> itemsInLists { get; set; }
+        public List<ItemInList> ItemsInLists { get; set; }
     }
 }

@@ -18,30 +18,26 @@ namespace Infrastructure.Data.Users
             _signInManager = signInManager;
         }
 
-        public async Task RemoveUser(User user)
+        public async Task RemoveUserAsync(User user)
         {
             await _userManager.DeleteAsync(user);
         }
 
-        public async Task<Object> RegisterUser(User user, string password)
+        public async Task<IdentityResult> RegisterUserAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
         }
-        public async Task<Object> GoogleRegisterUser(User user)
-        {
-            return await _userManager.CreateAsync(user);
-        }
-        public async Task SignInUser(User user)
+        public async Task SignInUserAsync(User user)
         {
             await _signInManager.SignInAsync(user, isPersistent: false);
         }
 
-        public async Task<Object> PasswordSignInUser(string user, string password)
+        public async Task<SignInResult> PasswordSignInUserAsync(string user, string password)
         {
             return await _signInManager.PasswordSignInAsync(user, password, false, false);
         }
 
-        public async Task<User> GetByEmail(string email)
+        public async Task<User> GetByEmailAsync(string email)
         {
             User user = await _userManager.FindByEmailAsync(email);
             if (user == null)

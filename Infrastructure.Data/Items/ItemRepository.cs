@@ -12,7 +12,7 @@ namespace Infrastructure.Data.Items
         {
         }
 
-        public async Task UpdateItem(int id, string newName)
+        public async Task UpdateItemAsync(int id, string newName)
         {
             _context.Items.FirstOrDefault(i => i.Id == id).Name = newName;
             await _context.SaveChangesAsync();

@@ -6,6 +6,6 @@ namespace Domain.Interfaces.Items
 {
     public interface IItemRepository : IGenericRepository<Item>
     {
-        Task UpdateItem(int id, string newName);
+        Task UpdateItemAsync(int id, string newName);
     }
 }

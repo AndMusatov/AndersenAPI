@@ -10,6 +10,8 @@ namespace Infrastructure.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<ShoppingList> ShoppingLists { get; set; }
         public DbSet<ItemToShoppingList> ItemToShoppingLists { get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
+        public DbSet<UserOrder> UserOrders { get; set; }
 
         public ShopContext(DbContextOptions<ShopContext> options)
             : base(options)

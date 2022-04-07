@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Interfaces.IShoppingLists
+namespace Domain.Interfaces.UserOrders
 {
-    public interface IShoppingListRepository : IGenericRepository<ShoppingList>
+    public interface IUserOrdersRepository : IGenericRepository<UserOrder>
     {
-        Task UpdateListAsync(int id, string newName);
+        Task<IEnumerable<UserOrder>> GetUserOrdersById(string userId);
     }
 }

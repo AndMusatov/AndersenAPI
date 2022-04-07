@@ -14,12 +14,12 @@ namespace Infrastructure.Data.ItemToShoppingLists
         {
         }
 
-        public async Task<List<ItemToShoppingList>> GetListsByShoppingListId(int id)
+        public async Task<List<ItemToShoppingList>> GetListsByShoppingListIdAsync(int id)
         {
             return await _context.ItemToShoppingLists.Where(s => s.ListId == id).ToListAsync();
         }
 
-        public async Task<ItemToShoppingList> UpdateItem(int id, int shopListId, int itemId, int value)
+        public async Task<ItemToShoppingList> UpdateItemAsync(int id, int shopListId, int itemId, int value)
         {
             ItemToShoppingList item = _context.ItemToShoppingLists.FirstOrDefault(x => x.Id == id);
             if (item == null)

@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
 
@@ -6,11 +7,10 @@ namespace Domain.Interfaces.Users
 {
     public interface IUserRepository
     {
-        Task<Object> RegisterUser(User user, string password);
-        Task<Object> GoogleRegisterUser(User user);
-        Task SignInUser(User user);
-        Task<Object> PasswordSignInUser(string user, string password);
-        Task<User> GetByEmail(string email);
-        Task RemoveUser(User user);
+        Task<IdentityResult> RegisterUserAsync(User user, string password);
+        Task SignInUserAsync(User user);
+        Task<SignInResult> PasswordSignInUserAsync(string user, string password);
+        Task<User> GetByEmailAsync(string email);
+        Task RemoveUserAsync(User user);
     }
 }

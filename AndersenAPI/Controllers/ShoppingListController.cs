@@ -1,86 +1,68 @@
-﻿using Domain.Interfaces.IShoppingLists;
-using Domain.Interfaces.Items;
-using Domain.Interfaces.ItemToShoppingLists;
-using Infrastructure.Business.NewFolder;
-using Infrastructure.Business.ShoppingLists;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Services.Interfaces.ItemToShoppingLists;
+using Services.Interfaces.ShoppingLists;
 using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Authorize]
     public class ShoppingListController : Controller
     {
-        readonly IItemRepository _itemRepository;
-        readonly IShoppingListRepository _shopListRepository;
-        readonly IItemToShoppingListRepository _itemToShoppingListRepository;
-        public ShoppingListController(IShoppingListRepository repository, IItemRepository itemRepository, IItemToShoppingListRepository itemToShoppingListRepository)
+        private readonly IShoppingListService _shoppingListService;
+        private readonly IItemToShoppingService _itemToShoppingService;
+
+        public ShoppingListController(IShoppingListService shoppingListService, 
+            IItemToShoppingService itemToShoppingService)
         {
-            _itemRepository = itemRepository;
-            _shopListRepository = repository;
-            _itemToShoppingListRepository = itemToShoppingListRepository;
+            _shoppingListService = shoppingListService;
+            _itemToShoppingService = itemToShoppingService;
         }
 
         [HttpGet("GetShoppingList")]
         public async Task<IActionResult> GetItem(int id)
         {
-            ShoppingListService shoppingListInfrastructure = new ShoppingListService(_shopListRepository);
-            return Ok(await shoppingListInfrastructure.GetItem(id));
+            return Ok(await _shoppingListService.GetItemAsync(id));
         }
 
         [HttpGet("GetItemsInShoppingList")]
         public async Task<IActionResult> GetList(int shoppingListId)
         {
-            ItemToShoppingService listInfrastructure =
-                new ItemToShoppingService(_itemRepository, _shopListRepository, _itemToShoppingListRepository);
-            return Ok(await listInfrastructure.GetList(shoppingListId));
+            return Ok(await _itemToShoppingService.GetListAsync(shoppingListId));
         }
 
         [HttpPost("AddShoppingList")]
         public async Task<IActionResult> AddItem(string name)
         {
-            ShoppingListService shoppingListInfrastructure = new ShoppingListService(_shopListRepository);
-            return Ok(await shoppingListInfrastructure.AddItem(name));
+            return Ok(await _shoppingListService.AddItemAsync(name));
         }
 
         [HttpPost("AddItemToShoppingList")]
         public async Task<IActionResult> AddList(int listId, int itemId, int value)
         {
-
-            ItemToShoppingService listInfrastructure =
-                new ItemToShoppingService(_itemRepository, _shopListRepository, _itemToShoppingListRepository);
-            return Ok(await listInfrastructure.AddList(listId, itemId, value));
+            return Ok(await _itemToShoppingService.AddListAsync(listId, itemId, value));
         }
 
         [HttpDelete("DeleteShoppingList")]
         public async Task<IActionResult> DeleteItem(int id)
         {
-            ShoppingListService shoppingListInfrastructure = new ShoppingListService(_shopListRepository);
-            return Ok(await shoppingListInfrastructure.DeleteItem(id));
+            return Ok(await _shoppingListService.DeleteItemAsync(id));
         }
 
         [HttpDelete("DeleteItemInShoppingList")]
         public async Task<IActionResult> DeleteList(int id)
         {
-            ItemToShoppingService listInfrastructure =
-                new ItemToShoppingService(_itemRepository, _shopListRepository, _itemToShoppingListRepository);
-            return Ok(await listInfrastructure.DeleteList(id));
+            return Ok(await _itemToShoppingService.DeleteListAsync(id));
         }
 
         [HttpPatch("UpdateShoppingList")]
         public async Task<IActionResult> UpdateItem(int id, string newName)
         {
-            ShoppingListService shoppingListInfrastructure = new ShoppingListService(_shopListRepository);
-            return Ok(await shoppingListInfrastructure.UpdateItem(id, newName));
+            return Ok(await _shoppingListService.UpdateItemAsync(id, newName));
         }
 
         [HttpPatch("UpdateItemToShoppingList")]
         public async Task<IActionResult> UpdateList(int id, int shopListId, int itemId, int value)
         {
-            ItemToShoppingService listInfrastructure =
-                new ItemToShoppingService(_itemRepository, _shopListRepository, _itemToShoppingListRepository);
-            return Ok(await listInfrastructure.UpdateList(id, shopListId, itemId, value));
+            return Ok(await _itemToShoppingService.UpdateListAsync(id, shopListId, itemId, value));
         }
     }
 }

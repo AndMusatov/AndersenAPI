@@ -15,9 +15,11 @@ namespace Infrastructure.Business.NewFolder
 {
     public class ItemToShoppingService : IItemToShoppingService
     {
-        readonly IItemRepository _itemRepository;
-        readonly IShoppingListRepository _shopListRepository;
-        readonly IItemToShoppingListRepository _itemToShoppingListRepository;
+        private readonly IItemRepository _itemRepository;
+        private readonly IShoppingListRepository _shopListRepository;
+        private readonly IItemToShoppingListRepository _itemToShoppingListRepository;
+
+        private const string DeletedStatus = "Deleted";
 
         public ItemToShoppingService(
             IItemRepository itemRepository,
@@ -29,56 +31,65 @@ namespace Infrastructure.Business.NewFolder
             _itemToShoppingListRepository = itemToShoppingListRepository;
         }
 
-        public async Task<ListOutputForm> GetList(int listId)
+        public async Task<ListOutputForm> GetListAsync(int listId)
         {
-            List<ItemInList> itemInLists = new List<ItemInList>();
-            List<ItemToShoppingList> itemToShoppingLists = await _itemToShoppingListRepository.GetListsByShoppingListId(listId);
+            var itemInLists = new List<ItemInList>();
+            var itemToShoppingLists = await _itemToShoppingListRepository.GetListsByShoppingListIdAsync(listId);
+
             foreach (var item in itemToShoppingLists)
             {
-                Item itemVar = await _itemRepository.GetById(item.ItemId);
+                var itemVar = await _itemRepository.GetByIdAsync(item.ItemId);
                 if (itemVar == null)
+                {
                     return null;
+                }
                 itemInLists.Add(new ItemInList
                 {
                     Item = itemVar,
                     Value = item.Value
                 });
             }
-            ShoppingList list = await _shopListRepository.GetById(listId);
+
+            var list = await _shopListRepository.GetByIdAsync(listId);
+
             if (list == null)
+            {
                 return null;
-            ListOutputForm form = new ListOutputForm
+            }
+
+            var form = new ListOutputForm
             {
                 Name = list.Title,
-                itemsInLists = itemInLists
+                ItemsInLists = itemInLists
             };
+
             return form;
         }
 
-        public async Task<ItemToShoppingList> AddList(int listId, int itemId, int value)
+        public async Task<ItemToShoppingList> AddListAsync(int listId, int itemId, int value)
         {
-            ItemToShoppingList item = new()
+            var item = new ItemToShoppingList()
             {
                 ListId = listId,
                 ItemId = itemId,
                 Value = value
             };
 
-            await _itemToShoppingListRepository.Add(item);
+            await _itemToShoppingListRepository.AddAsync(item);
 
             return item;
         }
 
-        public async Task<ItemToShoppingList> UpdateList(int id, int shopListId, int itemId, int value)
+        public async Task<ItemToShoppingList> UpdateListAsync(int id, int shopListId, int itemId, int value)
         {
-            return await _itemToShoppingListRepository.UpdateItem(id, shopListId, itemId, value);
+            return await _itemToShoppingListRepository.UpdateItemAsync(id, shopListId, itemId, value);
         }
 
-        public async Task<string> DeleteList(int id)
+        public async Task<string> DeleteListAsync(int id)
         {
-            ItemToShoppingList item = await _itemToShoppingListRepository.GetById(id);
-            await _itemToShoppingListRepository.Remove(item);
-            return "Deleted";
+            var item = await _itemToShoppingListRepository.GetByIdAsync(id);
+            await _itemToShoppingListRepository.RemoveAsync(item);
+            return DeletedStatus;
         }
     }
 }

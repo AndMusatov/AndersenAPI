@@ -12,7 +12,7 @@ namespace Infrastructure.Data.ShoppingLists
         {
         }
 
-        public async Task UpdateList(int id, string newName)
+        public async Task UpdateListAsync(int id, string newName)
         {
             _context.ShoppingLists.FirstOrDefault(i => i.Id == id).Title = newName;
             await _context.SaveChangesAsync();

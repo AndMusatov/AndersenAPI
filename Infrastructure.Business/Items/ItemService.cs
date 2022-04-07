@@ -1,48 +1,47 @@
 ﻿using Domain.Core.Models;
 using Domain.Interfaces.Items;
 using Services.Interfaces.Items;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Items
 {
     public class ItemService : IItemService
     {
-        readonly IItemRepository _itemRepository;
+        private readonly IItemRepository _itemRepository;
+        private const string DeletedSatus = "Deleted";
+        private const string UpdatedSatus = "Updated";
+
         public ItemService(IItemRepository itemRepository)
         {
             _itemRepository = itemRepository;
         }
 
-        public async Task<Item> GetItem(int id)
+        public async Task<Item> GetItemAsync(int id)
         {
-            return await _itemRepository.GetById(id);
+            return await _itemRepository.GetByIdAsync(id);
         }
 
-        public async Task<Item> AddItem(string name)
+        public async Task<Item> AddItemAsync(string name)
         {
-            Item item = new()
+            var item = new Item()
             {
                 Name = name
             };
-            await _itemRepository.Add(item);
+            await _itemRepository.AddAsync(item);
             return item;
         }
 
-        public async Task<string> DeleteItem(int id)
+        public async Task<string> DeleteItemAsync(int id)
         {
-            Item item = await _itemRepository.GetById(id);
-            await _itemRepository.Remove(item);
-            return "Item was deleted";
+            var item = await _itemRepository.GetByIdAsync(id);
+            await _itemRepository.RemoveAsync(item);
+            return DeletedSatus;
         }
 
-        public async Task<string> UpdateItem(int id, string newName)
+        public async Task<string> UpdateItemAsync(int id, string newName)
         {
-            await _itemRepository.UpdateItem(id, newName);
-            return "Item was updated";
+            await _itemRepository.UpdateItemAsync(id, newName);
+            return UpdatedSatus;
         }
     }
 }

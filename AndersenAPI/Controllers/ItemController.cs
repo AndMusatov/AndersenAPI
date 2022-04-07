@@ -1,7 +1,5 @@
-﻿using Domain.Interfaces.Items;
-using Infrastructure.Business.Items;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Services.Interfaces.Items;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -9,38 +7,35 @@ namespace API.Controllers
 
     public class ItemController : Controller
     {
-        readonly IItemRepository _itemRepository;
-        public ItemController(IItemRepository itemRepository)
+        private readonly IItemService _itemService;
+
+        public ItemController(IItemService itemService)
         {
-            _itemRepository = itemRepository;
+            _itemService = itemService;
         }
 
         [HttpGet("GetItem")]
         public async Task<IActionResult> GetItem(int id)
         {
-            ItemService itemInfrastructure = new ItemService(_itemRepository);
-            return Ok(await itemInfrastructure.GetItem(id));
+            return Ok(await _itemService.GetItemAsync(id));
         }
 
         [HttpPost("AddItem")]
         public async Task<IActionResult> AddItem(string name)
         {
-            ItemService itemInfrastructure = new ItemService(_itemRepository);
-            return Ok(await itemInfrastructure.AddItem(name));
+            return Ok(await _itemService.AddItemAsync(name));
         }
 
         [HttpDelete("DeleteItem")]
         public async Task<IActionResult> DeleteItem(int id)
         {
-            ItemService itemInfrastructure = new ItemService(_itemRepository);
-            return Ok(await itemInfrastructure.DeleteItem(id));
+            return Ok(await _itemService.DeleteItemAsync(id));
         }
 
         [HttpPatch("UpdateItem")]
         public async Task<IActionResult> UpdateItem(int id, string newName)
         {
-            ItemService itemInfrastructure = new ItemService(_itemRepository);
-            return Ok(await itemInfrastructure.UpdateItem(id, newName));
+            return Ok(await _itemService.UpdateItemAsync(id, newName));
         }
     }
 }

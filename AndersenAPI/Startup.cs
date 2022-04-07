@@ -1,14 +1,24 @@
 using Domain.Core.Models;
 using Domain.Interfaces.Generic;
+using Domain.Interfaces.IInventory;
 using Domain.Interfaces.IShoppingLists;
 using Domain.Interfaces.Items;
 using Domain.Interfaces.ItemToShoppingLists;
+using Domain.Interfaces.UserOrders;
 using Domain.Interfaces.Users;
+using Infrastructure.Business.Inventories;
+using Infrastructure.Business.Items;
+using Infrastructure.Business.NewFolder;
+using Infrastructure.Business.ShoppingLists;
+using Infrastructure.Business.UserOrders;
+using Infrastructure.Business.Users;
 using Infrastructure.Data;
 using Infrastructure.Data.Generic;
+using Infrastructure.Data.Inventories;
 using Infrastructure.Data.Items;
 using Infrastructure.Data.ItemToShoppingLists;
 using Infrastructure.Data.ShoppingLists;
+using Infrastructure.Data.UserOrders;
 using Infrastructure.Data.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -19,6 +29,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Services.Interfaces.Inventories;
+using Services.Interfaces.Items;
+using Services.Interfaces.ItemToShoppingLists;
+using Services.Interfaces.ShoppingLists;
+using Services.Interfaces.UserOrders;
+using Services.Interfaces.Users;
 
 namespace AndersenAPI
 {
@@ -59,14 +75,20 @@ namespace AndersenAPI
                 });
 
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddTransient<IItemRepository, ItemRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
-            services.AddTransient<IShoppingListRepository, ShoppingListRepository>();
             services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
-            services.AddTransient<IItemToShoppingListRepository, ItemToShoppingListRepository>();
             services.AddScoped<IItemToShoppingListRepository, ItemToShoppingListRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IInventoryRepository, InventoryRepository>();
+            services.AddScoped<IUserOrdersRepository, UserOrderRepository>();
+
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IShoppingListService, ShoppingListService>();
+            services.AddTransient<IItemToShoppingService, ItemToShoppingService>();
+            services.AddTransient<IItemService, ItemService>();
+            services.AddTransient<IInventoryService, InventoryService>();
+            services.AddTransient<IUserOrderService, UserOrderService>();
+
             services.AddHttpContextAccessor();
         }
 

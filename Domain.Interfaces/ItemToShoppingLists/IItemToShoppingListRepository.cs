@@ -10,8 +10,8 @@ namespace Domain.Interfaces.ItemToShoppingLists
 {
     public interface IItemToShoppingListRepository : IGenericRepository<ItemToShoppingList>
     {
-        Task<List<ItemToShoppingList>> GetListsByShoppingListId(int id);
+        Task<List<ItemToShoppingList>> GetListsByShoppingListIdAsync(int id);
 
-        Task<ItemToShoppingList> UpdateItem(int id, int shopListId, int itemId, int value);
+        Task<ItemToShoppingList> UpdateItemAsync(int id, int shopListId, int itemId, int value);
     }
 }

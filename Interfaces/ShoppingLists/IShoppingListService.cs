@@ -5,9 +5,9 @@ namespace Services.Interfaces.ShoppingLists
 {
     public interface IShoppingListService
     {
-        Task<ShoppingList> GetItem(int id);
-        Task<ShoppingList> AddItem(string name);
-        Task<string> DeleteItem(int id);
-        Task<string> UpdateItem(int id, string newName);
+        Task<ShoppingList> GetItemAsync(int id);
+        Task<ShoppingList> AddItemAsync(string name);
+        Task<string> DeleteItemAsync(int id);
+        Task<string> UpdateItemAsync(int id, string newName);
     }
 }

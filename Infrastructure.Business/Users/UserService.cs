@@ -1,6 +1,7 @@
 ﻿using Domain.Core.Forms;
 using Domain.Core.Models;
 using Domain.Interfaces.Users;
+using Microsoft.AspNetCore.Identity;
 using Services.Interfaces.Users;
 using System.Threading.Tasks;
 
@@ -14,23 +15,22 @@ namespace Infrastructure.Business.Users
             _userRepository = userRepository;
         }
 
-        public async Task<object> Registration(RegisterModel registerModel)
+        public async Task<IdentityResult> RegistrationAsync(RegisterModel registerModel)
         {
-            User user = new User { Email = registerModel.Email, UserName = registerModel.UserName };
-            var result = await _userRepository.RegisterUser(user, registerModel.Password);
-            await _userRepository.SignInUser(user);
+            var user = new User { Email = registerModel.Email, UserName = registerModel.UserName };
+            var result = await _userRepository.RegisterUserAsync(user, registerModel.Password);
+            await _userRepository.SignInUserAsync(user);
             return result;
         }
 
-        public async Task<object> DeleteUser(string email)
+        public async Task DeleteUserAsync(string email)
         {
-            await _userRepository.RemoveUser(await _userRepository.GetByEmail(email));
-            return "User was deleted";
+            await _userRepository.RemoveUserAsync(await _userRepository.GetByEmailAsync(email));
         }
 
-        public async Task<object> Login(string userName, string password)
+        public async Task<SignInResult> LoginAsync(string userName, string password)
         {
-            return await _userRepository.PasswordSignInUser(userName, password);
+            return await _userRepository.PasswordSignInUserAsync(userName, password);
         }
     }
 }
